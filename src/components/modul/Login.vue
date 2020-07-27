@@ -28,7 +28,7 @@
                     </div>
                 </div>
                 <div class="r-button">
-                    <button type="submit"><a href="#">Login</a></button>
+                    <button type="submit">Login</button>
                     <button class="btn-reg"><a href="#">Register</a></button>
                 </div>
             </form>
@@ -79,11 +79,12 @@ export default {
     actionSuccess(res) {
       if (res.data.code === 1) {
         localStorage.token = res.data.response.token;
+        localStorage.welcome = true;
         this.code = 1;
         this.flashData = 'Berhasil Login';
         setTimeout(() => {
           this.$router.replace(this.$route.query.redirect || '/dashboard');
-        }, 3000);
+        }, 1000);
       }
       if (res.data.code !== 1) {
         this.code = 2;
@@ -122,20 +123,25 @@ export default {
     display: flex;
     align-items: center;
     padding-left: 10px;
+    transition: 1s;
 }
 .success{
     background-color: rgba(0, 179, 30, 0.883);
+    transition: 1s;
 }
 .gagal{
     background-color: rgba(248, 0, 0, 0.7);
+    transition: 1s;
 }
 .display{
     display:none!important;
+    transition: 1s;
 }
 .flash-data h3{
     font-family: 'Airbnb Cereal App Bold';
     font-size: 20px;
     color: #fff;
+    transition: 1s;
 }
 .r-logo{
     width: 100%;
@@ -252,6 +258,9 @@ export default {
     background-color: #000;
     margin-right: 10px;
     border-radius: 7px;
+    font-family: 'Airbnb Cereal App Medium';
+    font-size: 15px;
+    color: #fff;
 }
 .r-button button a{
     font-family: 'Airbnb Cereal App Medium';

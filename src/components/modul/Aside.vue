@@ -13,33 +13,31 @@
         </div>
         <div class="menu-section">
             <div class="link-menunav">
-                <a href="#">Explore</a>
-            </div>
-
-            <div class="link-menunav">
                 <a href="#">History</a>
             </div>
 
             <div class="link-menunav">
-                <a href="#" v-on:click="addBook">Add Book</a>
+                <a href="#" v-on:click="$emit('addBookClick')">Add Book</a>
             </div>
 
             <div class="link-menunav mobile-view">
-                <a href="#">All Categories</a>
+                <a href="#">Bokmark</a>
             </div>
 
             <div class="link-menunav mobile-view">
-                <a href="#">All Times</a>
+                <a href="#">Explore</a>
             </div>
 
             <div class="link-menunav">
-                <a href="#">Log Out</a>
+                <a @click="logOut" style="color: red; cursor: pointer;">Log Out</a>
             </div>
         </div>
     </aside>
 </template>
 
 <script>
+import swal from 'sweetalert';
+
 export default {
   name: 'Aside',
   data() {
@@ -52,9 +50,15 @@ export default {
       document.querySelector('aside').classList.toggle('aside-tgl');
       document.querySelector('.burger-section').classList.toggle('burger-tgl');
     },
-    addBook() {
-      // eslint-disable-next-line no-console
-      console.log(1);
+    logOut() {
+      localStorage.removeItem('token');
+      swal('Bye Bye ^_^').then((l) => {
+        if (l) {
+          this.$router.go();
+        } else {
+          this.$router.go();
+        }
+      });
     },
   },
 };
@@ -119,6 +123,7 @@ aside{
     right: -170%;
     top: 42px;
     transition: 0s;
+    cursor: pointer;
 }
 .burger-section span::before{
     content: '';
