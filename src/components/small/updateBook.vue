@@ -1,26 +1,26 @@
 <template>
     <div class="modal-layer">
-        <form v-on:submit.prevent="addBook" class="box-modal">
+        <form @submit.prevent="updateData(detailsBook)" class="box-modal">
             <div class="top-box">
-                <h3>Add Book</h3>
-                <h3 class="cross-x" v-on:click="$emit('closeModalClick')">
+                <h3>Update Book</h3>
+                <h3 class="cross-x" @click="closeModal">
                     <i class="far fa-times-circle"></i></h3>
             </div>
             <div class="input-box">
                 <label for="a">Title</label>
-                <input type="text" placeholder="input a title" v-model="addData.title">
+                <input type="text" :placeholder="detailsBook.title" v-model="update.title">
             </div>
             <div class="input-box">
                 <label for="a">Author</label>
-                <input type="text" placeholder="input a Author" v-model="addData.author">
+                <input type="text" :placeholder="detailsBook.author" v-model="update.author">
             </div>
             <div class="input-box">
                 <label for="a">Image</label>
-                <input type="text" placeholder="input a Publisher" v-model="addData.image">
+                <input type="text" :placeholder="detailsBook.image" v-model="update.image">
             </div>
             <div class="input-box">
                 <label for="a">Categories</label>
-                <select v-model="addData.id_category" id="ctg">
+                <select v-model="update.id_category" id="ctg" placeholder="Select Category">
                     <option value="1">Comedy</option>
                     <option value="2">Horor</option>
                     <option value="3">Art</option>
@@ -31,7 +31,7 @@
             <div class="input-box">
                 <label for="a">Details</label>
                 <textarea type="text"
-                placeholder="input a Details" v-model="addData.description"> </textarea>
+                :placeholder="detailsBook.description" v-model="update.description"> </textarea>
             </div>
 
             <button type="submit">Add</button>
@@ -45,13 +45,12 @@ import axios from 'axios';
 import swal from 'sweetalert';
 
 export default {
-
+  props: ['detailsBook'],
   data() {
     return {
-      addData: {
+      update: {
         title: '',
         author: '',
-        publisher: '',
         image: '',
         id_category: '',
         description: '',
@@ -59,27 +58,31 @@ export default {
     };
   },
   methods: {
-    addBook() {
-      axios.post('http://localhost:2000/api/library/book/insert', this.addData)
+    updateData(params) {
+      axios.put(`http://localhost:2000/api/library/book/update/${params.id}`, this.update)
         .then((result) => {
-          // eslint-disable-next-line no-console
-          if (result.data.status === 200) {
-            document.querySelector('.modal-layer').classList.remove('show-modal-layer');
-            // eslint-disable-next-line no-alert
-            swal('Berhasil', 'Berhasil Tmbah Buku', 'success')
+          if (result.status === 200) {
+            swal('Sukses', 'Berhasil Update Buku !', 'success')
               .then((sts) => {
                 if (sts) {
-                  this.$router.go('/dashboard');
+                  document.querySelector('.modal-layer').classList.remove('show-modal');
+                  this.$router.go(`/details/${params.uri_book}`);
                 }
               });
           }
         });
+    },
+    closeModal() {
+      document.querySelector('.modal-layer').classList.remove('show-modal');
     },
   },
 };
 </script>
 
 <style scoped>
+.show-modal{
+    display: flex!important;
+}
 .modal-layer{
     width: 100vw;
     height: 100vh;

@@ -28,7 +28,7 @@
                     </div>
                 </div>
                 <div class="r-button">
-                    <button type="submit"><a href="#">Login</a></button>
+                    <button type="submit">Login</button>
                     <button class="btn-reg"><a href="#">Register</a></button>
                 </div>
             </form>
@@ -48,6 +48,8 @@
 </template>
 
 <script>
+import swal from 'sweetalert';
+import axios from 'axios';
 
 export default {
   name: 'Login',
@@ -77,13 +79,14 @@ export default {
         });
     },
     actionSuccess(res) {
-      if (res.data.code === 1) {
+      if (res.data.code === 1 && res.data.response.is_active === 1) {
         localStorage.token = res.data.response.token;
+        localStorage.welcome = true;
         this.code = 1;
         this.flashData = 'Berhasil Login';
         setTimeout(() => {
           this.$router.replace(this.$route.query.redirect || '/dashboard');
-        }, 3000);
+        }, 1000);
       }
       if (res.data.code !== 1) {
         this.code = 2;
@@ -93,8 +96,20 @@ export default {
         this.needActive(res);
       }
     },
-    needActive() {
-      // eslint-disable-next-line no-console
+    needActive(s) {
+      axios.post('http://localhost:2000/api/library/user/sendVerif', {
+        email: s.data.response.email,
+        subject: 'Verification SignUp',
+        text: `verification : http://localhost:2000/api/library/user/updateVerify/?token=${s.data.response.token}`,
+      })
+        .then((t) => {
+          if (t.data.status === 200) {
+            swal('ok');
+          }
+          if (t.data.status === 401) {
+            swal('error');
+          }
+        });
       this.code = 3;
       this.flashData = 'Cek email untuk aktivasi akun!';
     },
@@ -122,20 +137,25 @@ export default {
     display: flex;
     align-items: center;
     padding-left: 10px;
+    transition: 1s;
 }
 .success{
     background-color: rgba(0, 179, 30, 0.883);
+    transition: 1s;
 }
 .gagal{
     background-color: rgba(248, 0, 0, 0.7);
+    transition: 1s;
 }
 .display{
     display:none!important;
+    transition: 1s;
 }
 .flash-data h3{
     font-family: 'Airbnb Cereal App Bold';
     font-size: 20px;
     color: #fff;
+    transition: 1s;
 }
 .r-logo{
     width: 100%;
@@ -252,6 +272,9 @@ export default {
     background-color: #000;
     margin-right: 10px;
     border-radius: 7px;
+    font-family: 'Airbnb Cereal App Medium';
+    font-size: 15px;
+    color: #fff;
 }
 .r-button button a{
     font-family: 'Airbnb Cereal App Medium';

@@ -2,10 +2,10 @@
     <nav>
         <div class="menu-cat">
             <div class="cat-ls">
-                <a>All Categories</a>
+                <a>Bokmarks</a>
             </div>
             <div class="cat-ls">
-                <a>All Time</a>
+                <a>Explore</a>
             </div>
         </div>
         <form class="nav-search">
@@ -46,6 +46,7 @@ nav{
     background-color: #fff;
     display: flex;
     position: fixed;
+    z-index: 10;
     box-shadow: 0px 5px 20px 10px rgba(0,0,0,0.2);
 }
 

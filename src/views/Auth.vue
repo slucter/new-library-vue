@@ -14,7 +14,11 @@
 
 <script>
 export default {
-
+  mounted() {
+    if (localStorage.token) {
+      this.$router.push('/dashboard');
+    }
+  },
 };
 </script>
 

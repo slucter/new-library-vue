@@ -9,10 +9,16 @@ export default new Vuex.Store({
     test: ['hello'],
     allBook: [],
     srcVal: '',
+    whatCategory: '',
   },
   mutations: {
     SEARCH_VALUES(state, data) {
       state.srcVal = data;
+    },
+    ON_CATEGORY(state, data) {
+      state.whatCategory = data;
+      // eslint-disable-next-line no-console
+      console.log(state.whatCategory);
     },
   },
   actions: {

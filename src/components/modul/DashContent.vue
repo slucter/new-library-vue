@@ -6,46 +6,24 @@
         </div>
 
         <div class="category-pannel">
-            <div class="box-category">
-                <a href="#">COMEDY</a>
+            <div v-for="myCat in categoryList" :key="myCat.id" class="box-category">
+                <a v-on:click="clickCategory(myCat.category)">{{ myCat.category }}</a>
             </div>
-            <div class="box-category">
-                <a href="#">ROMANCE</a>
-            </div>
-            <div class="box-category">
-                <a href="#">EDUCATION</a>
-            </div>
-            <div class="box-category">
-                <a href="#">MUSIC</a>
-            </div>
-            <div class="box-category">
-                <a href="#">ART & MUSIC</a>
-            </div>
-            <div class="box-category">
-                <a href="#">HOROR</a>
-            </div>
-            <div class="box-category">
-                <a href="#">SCIENCE</a>
-            </div>
-            <div class="box-category">
-                <a href="#">RELIGION</a>
-            </div>
+
         </div>
         <Heading />
         <div class="card-list">
             <Card
-            v-for="dataw in filterBook"
+            v-for="dataw in (whatCategory ? filterCategory : filterBook)"
             :key="dataw.id"
             :thumb="dataw.image"
             :title="dataw.title"
             :author="dataw.author"
-            :publisher="dataw.publisher"
             :category="dataw.category"
-            :date="dataw.created_at.slice(0,9)"
             :params="dataw.uri_book"
             />
         </div>
-        <Modal />
+        <!-- <Modal /> -->
     </section>
 </template>
 
@@ -54,26 +32,54 @@ import axios from 'axios';
 import { mapState } from 'vuex';
 import Heading from '../small/HeadingSection.vue';
 import Card from '../small/CardBook.vue';
-import Modal from '../small/ModalCRUD.vue';
+// import Modal from '../small/ModalCRUD.vue';
 
 export default {
   name: 'DashContent',
   data() {
     return {
       bookSkuy: [],
+      categoryList: [
+        {
+          id: 1,
+          category: 'Horor',
+        },
+        {
+          id: 2,
+          category: 'Romance',
+        },
+        {
+          id: 3,
+          category: 'Education',
+        },
+        {
+          id: 4,
+          category: 'Music',
+        },
+        {
+          id: 5,
+          category: 'Science',
+        },
+        {
+          id: 6,
+          category: 'Art',
+        },
+      ],
     };
   },
   components: {
     Heading,
     Card,
-    Modal,
+    // Modal,
   },
   computed: {
-    ...mapState(['srcVal']),
+    ...mapState(['srcVal', 'whatCategory']),
     filterBook() {
       return this.bookSkuy.filter((e) => e.title.match(this.srcVal));
     },
-
+    filterCategory() {
+      return this.bookSkuy.filter((e) => e.category.match(this.whatCategory));
+    },
   },
   methods: {
     getBooks() {
@@ -81,6 +87,9 @@ export default {
         .then((result) => {
           this.bookSkuy = result.data.result;
         });
+    },
+    clickCategory(value) {
+      this.$store.commit('ON_CATEGORY', value);
     },
   },
   mounted() {
@@ -132,6 +141,7 @@ export default {
     align-items: center;
     border-radius: 50px;
     box-shadow: -1px 5px 25px -6px rgba(0,0,0,.5);
+    cursor: pointer;
 }
 
 .box-category a{
@@ -142,10 +152,11 @@ export default {
     text-decoration: none;
 }
 .card-list{
-    width: 100%;
+    width: 85%;
     background-color: rgb(255, 255, 255);
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+    margin: 0 auto;
 }
 </style>

@@ -2,29 +2,30 @@
     <div>
         <div class="wrap-top-cover">
             <div class="nav-cover">
-                <router-link to="/dashboard" class="rounded-back">kembali</router-link>
+                <router-link to="/dashboard" class="rounded-back">
+                <i class="fas fa-chevron-left"></i></router-link>
                 <div class="menu-cover">
-                    <a href="#">Edit</a>
-                    <a href="#">Delete</a>
+                    <a @click="clickEdit" >Edit</a>
+                    <a @click="deleteBook(detailsBook)">Delete</a>
                 </div>
             </div>
 
             <div class="thumb-detail">
-                <img :src="detailsBook.response[0].image" alt="thumb">
+                <img :src="detailsBook.image" alt="thumb">
             </div>
         </div>
 
         <div class="wrap-bottom">
             <div class="category-list">
-                <a href="#">{{detailsBook.response[0].category}}</a>
+                <a href="#">{{detailsBook.category}}</a>
             </div>
 
             <div class="title-book">
-                <h3>{{detailsBook.response[0].title}}</h3>
+                <h3>{{detailsBook.title}}</h3>
             </div>
             <div class="detail-create">
-                <h3>{{detailsBook.response[0].created_at.slice(0,9)}} |
-                    Publish by {{detailsBook.response[0].publisher}}</h3>
+                <h3>{{detailsBook.created_at.slice(0,9)}} |
+                    Publish by {{detailsBook.publisher}}</h3>
             </div>
             <div class="details-book">
                 <h3>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iste enim,
@@ -56,25 +57,61 @@
             </div>
 
    </div>
+   <Modal v-bind:detailsBook="detailsBook"/>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
+import swal from 'sweetalert';
+import Modal from '../components/small/updateBook.vue';
 
 export default {
 
   data() {
     return {
       detailsBook: [],
+      testaja: ' apa aja deh',
     };
+  },
+  components: {
+    Modal,
   },
   methods: {
     detBooks() {
       axios.get(`http://localhost:2000/api/library/book/details/${this.$route.params.slug}`)
         .then((res) => {
-          this.detailsBook = res.data;
+          // eslint-disable-next-line prefer-destructuring
+          this.detailsBook = res.data.response[0];
         });
+    },
+    clickEdit() {
+      document.querySelector('.modal-layer').classList.add('show-modal');
+    },
+    deleteBook(p) {
+      swal({
+        title: 'Apakah Anda yakin ?',
+        icon: 'warning',
+        text: 'Klik yes untuk melanjutkan!',
+        dangerMode: true,
+      }).then((sts) => {
+        if (sts) {
+          axios.delete(`http://localhost:2000/api/library/book/delete/${p.id}`)
+            .then((s) => {
+              if (s.data.status === 200) {
+                swal('Berhasil Menghapus!', 'Buku Telah Dihapus', 'success')
+                  .then((t) => {
+                    if (t) {
+                      this.$router.push('/dashboard');
+                    }
+                  });
+              }
+            });
+        } else {
+          // eslint-disable-next-line no-console
+          console.log('batal menghapus');
+        }
+      });
     },
   },
   mounted() {
@@ -132,6 +169,7 @@ export default {
     font-family: 'Airbnb Cereal App Bold';
     color: rgb(255, 255, 255);
     font-size: 30px;
+    cursor: pointer;
 }
 
 .thumb-detail{
@@ -161,6 +199,7 @@ export default {
     /* background-color: rgb(128, 67, 67); */
     display: flex;
     align-items: center;
+    margin-top: 7px;
 }
 .category-list a{
     text-decoration: none;

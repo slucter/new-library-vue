@@ -7,26 +7,26 @@
                 <h1>Register</h1>
                 <p>Welcome back, please Register<br>for login to your Account</p>
             </div>
-            <form action="" class="r-form">
+            <form @submit.prevent="regSubmit" class="r-form">
                 <div class="f-input">
                     <label for="fullname">FULL NAME</label>
-                    <input type="text" placeholder="Your Full Name" name="fullname">
+                    <input type="text" placeholder="Your Full Name" v-model="reg.fullname">
                 </div>
                 <div class="f-input">
                     <label for="username">USERNAME</label>
-                    <input type="text" placeholder="Your Username" name="username">
+                    <input type="text" placeholder="Your Username" v-model="reg.username">
                 </div>
                 <div class="f-input">
                     <label for="email">EMAIL</label>
-                    <input type="text" placeholder="Your Email" name="email">
+                    <input type="text" placeholder="Your Email" v-model="reg.email">
                 </div>
                 <div class="f-input">
                     <label for="password">PASSWORD</label>
-                    <input type="text" placeholder="Your Password" name="password">
+                    <input type="text" placeholder="Your Password" v-model="reg.password">
                 </div>
 
                 <div class="r-button">
-                    <button type="submit"><a href="#">Register</a></button>
+                    <button type="submit">Register</button>
                     <button class="btn-reg"><a href="#">Login</a></button>
                 </div>
             </form>
@@ -34,8 +34,35 @@
 </template>
 
 <script>
-export default {
+import axios from 'axios';
+import swal from 'sweetalert';
 
+export default {
+  data() {
+    return {
+      reg: {
+        fullname: '',
+        email: '',
+        username: '',
+        password: '',
+      },
+    };
+  },
+  methods: {
+    regSubmit() {
+      axios.post('http://localhost:2000/api/library/user/signup', this.reg)
+        .then((res) => {
+          if (res.data.status === 200) {
+            swal('Berhasil', 'Silahkan Cek Email Untuk Verifikasi', 'success')
+              .then((r) => {
+                if (r) {
+                  this.$router.push('/login');
+                }
+              });
+          }
+        });
+    },
+  },
 };
 </script>
 
@@ -164,6 +191,9 @@ export default {
     background-color: #000;
     margin-right: 10px;
     border-radius: 7px;
+    font-family: 'Airbnb Cereal App Medium';
+    font-size: 15px;
+    color: #fff;
 }
 .r-button button a{
     font-family: 'Airbnb Cereal App Medium';
