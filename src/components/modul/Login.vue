@@ -48,6 +48,8 @@
 </template>
 
 <script>
+import swal from 'sweetalert';
+import axios from 'axios';
 
 export default {
   name: 'Login',
@@ -77,7 +79,7 @@ export default {
         });
     },
     actionSuccess(res) {
-      if (res.data.code === 1) {
+      if (res.data.code === 1 && res.data.response.is_active === 1) {
         localStorage.token = res.data.response.token;
         localStorage.welcome = true;
         this.code = 1;
@@ -94,8 +96,20 @@ export default {
         this.needActive(res);
       }
     },
-    needActive() {
-      // eslint-disable-next-line no-console
+    needActive(s) {
+      axios.post('http://localhost:2000/api/library/user/sendVerif', {
+        email: s.data.response.email,
+        subject: 'Verification SignUp',
+        text: `verification : http://localhost:2000/api/library/user/updateVerify/?token=${s.data.response.token}`,
+      })
+        .then((t) => {
+          if (t.data.status === 200) {
+            swal('ok');
+          }
+          if (t.data.status === 401) {
+            swal('error');
+          }
+        });
       this.code = 3;
       this.flashData = 'Cek email untuk aktivasi akun!';
     },

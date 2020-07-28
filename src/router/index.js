@@ -6,6 +6,7 @@ import Details from '../views/Details.vue';
 import Auth from '../views/Auth.vue';
 import Login from '../components/modul/Login.vue';
 import Register from '../components/modul/Register.vue';
+import Verif from '../views/Verification.vue';
 
 Vue.use(VueRouter);
 
@@ -41,6 +42,11 @@ const routes = [
         component: Register,
       },
     ],
+  },
+  {
+    path: '/verification',
+    name: 'Verify',
+    component: Verif,
   },
 ];
 
