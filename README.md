@@ -63,7 +63,7 @@ VUE_APP_BASE_URL=YOUR_API_KEY
 </div>
 <br>
 <div align="center">
-    <h4 align="center">DASHBOARD, HISTORY PAGE</h4>
+    <h4 align="center">DASHBOARD, DETAIL PAGE</h4>
     <img width="430" src="./src/assets/img/thumb-readme/library-dashboard.png">
     <img width="430" src="./src/assets/img/thumb-readme/library-detail.png">  
 </div>
