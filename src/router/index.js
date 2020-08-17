@@ -7,6 +7,7 @@ import Auth from '../views/Auth.vue';
 import Login from '../components/modul/Login.vue';
 import Register from '../components/modul/Register.vue';
 import Verif from '../views/Verification.vue';
+import Loan from '../views/Loan.vue';
 
 Vue.use(VueRouter);
 
@@ -44,9 +45,14 @@ const routes = [
     ],
   },
   {
-    path: '/verification',
+    path: '/verification/:salting',
     name: 'Verify',
     component: Verif,
+  },
+  {
+    path: '/loan',
+    name: 'Loan',
+    component: Loan,
   },
 ];
 

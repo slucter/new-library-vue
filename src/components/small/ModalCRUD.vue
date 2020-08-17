@@ -60,7 +60,7 @@ export default {
   },
   methods: {
     addBook() {
-      axios.post('http://localhost:2000/api/library/book/insert', this.addData)
+      axios.post(`${process.env.VUE_APP_URL}/api/library/book/insert`, this.addData)
         .then((result) => {
           // eslint-disable-next-line no-console
           if (result.data.status === 200) {

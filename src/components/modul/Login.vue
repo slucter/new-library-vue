@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 <template>
     <div class="s-right">
             <div class="r-logo">
@@ -29,7 +28,8 @@
                 </div>
                 <div class="r-button">
                     <button type="submit">Login</button>
-                    <button class="btn-reg"><a href="#">Register</a></button>
+                    <button class="btn-reg">
+                      <router-link to="/register">Register</router-link></button>
                 </div>
             </form>
             <div v-if="code === 0" class="flash-data display">
@@ -50,6 +50,7 @@
 <script>
 import swal from 'sweetalert';
 import axios from 'axios';
+import jwt from 'jsonwebtoken';
 
 export default {
   name: 'Login',
@@ -73,9 +74,9 @@ export default {
         .then((result) => {
           this.actionSuccess(result);
         })
-        .catch((error) => {
+        .catch(() => {
           // eslint-disable-next-line no-console
-          console.log(error);
+          console.log('network error');
         });
     },
     actionSuccess(res) {
@@ -97,10 +98,13 @@ export default {
       }
     },
     needActive(s) {
-      axios.post('http://localhost:2000/api/library/user/sendVerif', {
+      const scrt = jwt.sign({ md5: s.data.response.salting }, 'irhashGans');
+      localStorage.token = s.data.response.token;
+      localStorage.procVerif = scrt;
+      axios.post(`${process.env.VUE_APP_URL}/api/library/user/sendVerif`, {
         email: s.data.response.email,
         subject: 'Verification SignUp',
-        text: `verification : http://localhost:2000/api/library/user/updateVerify/?token=${s.data.response.token}`,
+        text: `verification : http://${process.env.VUE_APP_BASE_URL_API}/verification/${s.data.response.salting}`,
       })
         .then((t) => {
           if (t.data.status === 200) {
@@ -113,6 +117,10 @@ export default {
       this.code = 3;
       this.flashData = 'Cek email untuk aktivasi akun!';
     },
+  },
+  mounted() {
+    // eslint-disable-next-line no-console
+    console.log(process.env.VUE_URL);
   },
 };
 </script>

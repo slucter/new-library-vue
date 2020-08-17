@@ -83,7 +83,7 @@ export default {
   },
   methods: {
     getBooks() {
-      axios.get('http://localhost:2000/api/library/book/')
+      axios.get(`${process.env.VUE_APP_URL}/api/library/book/`)
         .then((result) => {
           this.bookSkuy = result.data.result;
         });
@@ -158,5 +158,6 @@ export default {
     justify-content: space-between;
     flex-wrap: wrap;
     margin: 0 auto;
+    padding-bottom: 50px;
 }
 </style>

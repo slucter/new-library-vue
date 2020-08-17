@@ -4,7 +4,7 @@
             <div class="nav-cover">
                 <router-link to="/dashboard" class="rounded-back">
                 <i class="fas fa-chevron-left"></i></router-link>
-                <div class="menu-cover">
+                <div class="menu-cover" v-if="token.role === 2">
                     <a @click="clickEdit" >Edit</a>
                     <a @click="deleteBook(detailsBook)">Delete</a>
                 </div>
@@ -16,6 +16,9 @@
         </div>
 
         <div class="wrap-bottom">
+            <div class="nav-bottom">
+                <button @click="addLoan">BORROW</button>
+            </div>
             <div class="category-list">
                 <a href="#">{{detailsBook.category}}</a>
             </div>
@@ -55,7 +58,6 @@
                 rerum consectetur asperiores, ipsam sed dolorum veritatis temporibus, iure maiores
                 reprehenderit delectus, unde enim dolore? Iure, ducimus provident.</h3>
             </div>
-
    </div>
    <Modal v-bind:detailsBook="detailsBook"/>
     </div>
@@ -64,6 +66,7 @@
 <script>
 import axios from 'axios';
 import swal from 'sweetalert';
+import jwt from 'jsonwebtoken';
 import Modal from '../components/small/updateBook.vue';
 
 export default {
@@ -72,6 +75,7 @@ export default {
     return {
       detailsBook: [],
       testaja: ' apa aja deh',
+      token: '',
     };
   },
   components: {
@@ -79,7 +83,7 @@ export default {
   },
   methods: {
     detBooks() {
-      axios.get(`http://localhost:2000/api/library/book/details/${this.$route.params.slug}`)
+      axios.get(`${process.env.VUE_APP_URL}/api/library/book/details/${this.$route.params.slug}`)
         .then((res) => {
           // eslint-disable-next-line prefer-destructuring
           this.detailsBook = res.data.response[0];
@@ -96,7 +100,7 @@ export default {
         dangerMode: true,
       }).then((sts) => {
         if (sts) {
-          axios.delete(`http://localhost:2000/api/library/book/delete/${p.id}`)
+          axios.delete(`${process.env.VUE_APP_URL}/api/library/book/delete/${p.id}`)
             .then((s) => {
               if (s.data.status === 200) {
                 swal('Berhasil Menghapus!', 'Buku Telah Dihapus', 'success')
@@ -113,9 +117,28 @@ export default {
         }
       });
     },
+    async addLoan() {
+      const tokenUser = localStorage.token;
+      const idUser = await jwt.verify(tokenUser, 'irhashGans').id;
+      const idBook = this.detailsBook.id;
+
+      axios.post(`${process.env.VUE_APP_URL}/api/library/loan/loanInsert`, {
+        id_book: idBook,
+        id_user: idUser,
+      }).then((res) => {
+        if (res.data.status === 200) {
+          swal('berhasil!');
+        } else {
+          swal('gagal!');
+        }
+      });
+    },
   },
-  mounted() {
+  async mounted() {
     this.detBooks();
+    const myToken = localStorage.token;
+    const tokenKey = await jwt.verify(myToken, 'irhashGans');
+    this.token = tokenKey;
   },
 };
 </script>
@@ -137,6 +160,21 @@ export default {
     position: absolute;
     bottom:0;
     right: 0;
+}
+.btn-borrow{
+    position: absolute;
+    bottom: 100px;
+    right: 30px;
+    z-index: 10;
+    border: none;
+    outline: none;
+    background-color: rgb(224, 240, 0);
+    color: rgb(65, 65, 65);
+    width: 210px;
+    height: 70px;
+    border-radius: 15px;
+    font-size: 20px;
+    font-weight: bold;
 }
 .nav-cover{
     display: flex;
@@ -175,7 +213,7 @@ export default {
 .thumb-detail{
     width: 300px;
     height: 400px;
-    background-color: rgb(229, 182, 182);
+    background-color: rgb(161, 26, 26);
     position: absolute;
     bottom: -250px;
     right: 30px;
@@ -270,6 +308,30 @@ export default {
     border: none;
     outline: none;
     margin: 10px 0px 10px 70px;
+}
+.nav-bottom{
+    background-color: rgb(226, 226, 226);
+    display: flex;
+    width: 100%;
+    height: 75px;
+    position: absolute;
+    bottom: 10px;
+    right: 0;
+    justify-content: flex-end;
+    align-items: center;
+}
+.nav-bottom button{
+    width: 200px;
+    height: 60px;
+    background-color: rgb(240, 216, 0);
+    border: none;
+    outline: none;
+    margin-right: 30px;
+    border-radius: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    cursor: pointer;
 }
 
 @media(max-width: 414px){

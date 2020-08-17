@@ -27,7 +27,7 @@
 
                 <div class="r-button">
                     <button type="submit">Register</button>
-                    <button class="btn-reg"><a href="#">Login</a></button>
+                    <button class="btn-reg"><router-link to="/login">Login</router-link></button>
                 </div>
             </form>
         </div>
@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     regSubmit() {
-      axios.post('http://localhost:2000/api/library/user/signup', this.reg)
+      axios.post(`${process.env.VUE_APP_URL}/api/library/user/signup`, this.reg)
         .then((res) => {
           if (res.data.status === 200) {
             swal('Berhasil', 'Silahkan Cek Email Untuk Verifikasi', 'success')
