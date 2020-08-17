@@ -4,8 +4,8 @@
             <span v-on:click="btnBurger"></span>
         </div>
         <div class="profile-section">
-            <img src="../../assets/img/profil.jpeg" alt="profile">
-            <h3>Niki Zefanya</h3>
+            <img src="https://mir-s3-cdn-cf.behance.net/project_modules/disp/10f13510774061.560eadfde5b61.png" alt="profile">
+            <h3>{{dataUser.fullname}}</h3>
         </div>
         <div class="search-section mobile-view">
             <input type="text" placeholder="cari buku">
@@ -13,10 +13,10 @@
         </div>
         <div class="menu-section">
             <div class="link-menunav">
-                <a href="#">History</a>
+                <router-link to="/loan">History</router-link>
             </div>
 
-            <div class="link-menunav">
+            <div class="link-menunav" v-if="token.role === 2">
                 <a href="#" v-on:click="$emit('addBookClick')">Add Book</a>
             </div>
 
@@ -37,12 +37,15 @@
 
 <script>
 import swal from 'sweetalert';
+import axios from 'axios';
+import jwt from 'jsonwebtoken';
 
 export default {
   name: 'Aside',
   data() {
     return {
-
+      dataUser: '',
+      token: '',
     };
   },
   methods: {
@@ -54,12 +57,31 @@ export default {
       localStorage.removeItem('token');
       swal('Bye Bye ^_^').then((l) => {
         if (l) {
-          this.$router.go();
+          this.$router.push('/login');
         } else {
-          this.$router.go();
+          this.$router.push('/login');
         }
       });
     },
+    async getDataUser() {
+      const tokenLocal = localStorage.token;
+      const tokenw = await jwt.verify(tokenLocal, 'irhashGans').id;
+      axios.get(`${process.env.VUE_APP_URL}/api/library/user/search/${tokenw}`)
+        .then((result) => {
+          // eslint-disable-next-line no-console
+        //   console.log(result);
+          // eslint-disable-next-line prefer-destructuring
+          this.dataUser = result.data.rst[0];
+        });
+    },
+  },
+  async mounted() {
+    this.getDataUser();
+    const myToken = localStorage.token;
+    const tokenKey = await jwt.verify(myToken, 'irhashGans');
+    this.token = tokenKey;
+    // eslint-disable-next-line no-console
+    console.log(process.env.VUE_APP_URL);
   },
 };
 </script>

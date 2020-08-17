@@ -24,7 +24,7 @@ export default new Vuex.Store({
   actions: {
     actionLogin(context, data) {
       return new Promise((resolve) => {
-        axios.post('http://localhost:2000/api/library/user/login', data)
+        axios.post(`${process.env.VUE_APP_URL}/api/library/user/login`, data)
           .then((result) => {
             resolve(result);
           })

@@ -2,10 +2,13 @@
     <nav>
         <div class="menu-cat">
             <div class="cat-ls">
-                <a>Bokmarks</a>
+                <router-link
+                style="text-decoration: none;border: 1px solid #cacaca;
+                border-radius: 10px; padding: 5px 10px 5px 10px;"
+                to="/dashboard">Home</router-link>
             </div>
             <div class="cat-ls">
-                <a>Explore</a>
+                <a>Bokmarks</a>
             </div>
         </div>
         <form class="nav-search">

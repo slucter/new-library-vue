@@ -59,7 +59,7 @@ export default {
   },
   methods: {
     updateData(params) {
-      axios.put(`http://localhost:2000/api/library/book/update/${params.id}`, this.update)
+      axios.put(`${process.env.VUE_APP_URL}/api/library/book/update/${params.id}`, this.update)
         .then((result) => {
           if (result.status === 200) {
             swal('Sukses', 'Berhasil Update Buku !', 'success')
