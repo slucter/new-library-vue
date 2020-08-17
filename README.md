@@ -1,4 +1,4 @@
-# Food Cashier (POS)
+# Library Loan App
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/slucter/new-library-vue)
 ![GitHub contributors](https://img.shields.io/github/contributors/slucter/new-library-vue)
