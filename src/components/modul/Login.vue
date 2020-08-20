@@ -104,7 +104,7 @@ export default {
       axios.post(`${process.env.VUE_APP_URL}/api/library/user/sendVerif`, {
         email: s.data.response.email,
         subject: 'Verification SignUp',
-        text: `verification : http://${process.env.VUE_APP_BASE_URL_API}/verification/${s.data.response.salting}`,
+        text: `verification : ${process.env.VUE_APP_BASE_URL_API}/verification/${s.data.response.salting}`,
       })
         .then((t) => {
           if (t.data.status === 200) {
