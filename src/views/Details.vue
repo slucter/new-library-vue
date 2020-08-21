@@ -314,7 +314,7 @@ export default {
     display: flex;
     width: 100%;
     height: 75px;
-    position: absolute;
+    position: fixed;
     bottom: 10px;
     right: 0;
     justify-content: flex-end;
