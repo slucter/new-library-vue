@@ -315,7 +315,7 @@ export default {
     width: 100%;
     height: 75px;
     position: fixed;
-    bottom: 10px;
+    bottom: 5px;
     right: 0;
     justify-content: flex-end;
     align-items: center;
