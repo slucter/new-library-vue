@@ -22,7 +22,7 @@
                 </div>
                 <div class="f-input">
                     <label for="password">PASSWORD</label>
-                    <input type="text" placeholder="Your Password" v-model="reg.password">
+                    <input type="password" placeholder="Your Password" v-model="reg.password">
                 </div>
 
                 <div class="r-button">
@@ -53,7 +53,7 @@ export default {
       axios.post(`${process.env.VUE_APP_URL}/api/library/user/signup`, this.reg)
         .then((res) => {
           if (res.data.status === 200) {
-            swal('Berhasil', 'Silahkan Cek Email Untuk Verifikasi', 'success')
+            swal('Berhasil', 'Silahkan Ke Halaman Login', 'success')
               .then((r) => {
                 if (r) {
                   this.$router.push('/login');

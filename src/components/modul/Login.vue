@@ -14,7 +14,7 @@
                 </div>
                 <div class="f-input">
                     <label for="pasowrd">PASSWORD</label>
-                    <input type="text" placeholder="Your Password" v-model="datas.password">
+                    <input type="password" placeholder="Your Password" v-model="datas.password">
                 </div>
 
                 <div class="r-opt">
@@ -108,10 +108,10 @@ export default {
       })
         .then((t) => {
           if (t.data.status === 200) {
-            swal('ok');
+            swal('Verify link has been sent!');
           }
           if (t.data.status === 401) {
-            swal('error');
+            swal('Email Not Sent!');
           }
         });
       this.code = 3;
